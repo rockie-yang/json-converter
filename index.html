@@ -8,9 +8,9 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
 
   <style type="text/css">
-    html, body{
-      margin:0px;
-      padding:0px;
+    html, body {
+      margin: 0px;
+      padding: 0px;
     }
 
     .navbar {
@@ -37,18 +37,49 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-6">
-      <div id="editorLeft" class="editor">function foo(items) {
-        var x = "All this is syntax highlighted";
-        return x;
-        }
-      </div>
+      <form>
+        <div class="row">
+          <div class="col-sm-2">
+            <!--A dropdown button to choose which theme to use for the left editor-->
+            <button class="btn btn-default dropdown-toggle" type="button"
+                    id="dropdown-left-theme" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              theme
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" id="dropdown-left" aria-labelledby="dropdown-left-theme">
+              <li><a href="#" class="left-theme">github</a></li>
+              <li><a href="#" class="left-theme">chaos</a></li>
+              <li><a href="#" class="left-theme">chrome</a></li>
+            </ul>
+          </div>
+          <div class="col-sm-10">
+            <input id="urlLeft" type="text" class="form-control" placeholder="url which has json content">
+          </div>
+
+
+        </div>
+
+      </form>
+      <div id="editorLeft" class="editor">{a:1}</div>
+
     </div>
     <div class="col-sm-6">
-      <div id="editorRight" class="editor">function foo2(items) {
-        var x = "All this is syntax highlighted";
-        return x;
-        }
+
+      <!--A dropdown button to choose which theme to use for the left editor-->
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button"
+                id="dropdown-right-theme" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          theme
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" id="dropdown-right" aria-labelledby="dropdown-right-theme">
+          <li><a href="#" class="right-theme">github</a></li>
+          <li><a href="#" class="right-theme">chaos</a></li>
+          <li><a href="#" class="right-theme">chrome</a></li>
+        </ul>
       </div>
+
+      <div id="editorRight" class="editor">{"a":1}</div>
     </div>
   </div>
 </div>
@@ -56,29 +87,68 @@
 <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
 <script type="text/javascript">
   (function () {
     var editorLeft = ace.edit("editorLeft");
     editorLeft.setTheme("ace/theme/github");
-    editorLeft.getSession().setMode("ace/mode/javascript");
+    editorLeft.getSession().setMode("ace/mode/json");
+    editorLeft.$blockScrolling = Infinity;
 
     var editorRight = ace.edit("editorRight");
     editorRight.setTheme("ace/theme/github");
-    editorRight.getSession().setMode("ace/mode/javascript");
-    editorRight.setOptions({
-      readOnly: true,
-      highlightActiveLine: false,
-      highlightGutterLine: false
-    })
-    editorRight.renderer.$cursorLayer.element.style.opacity = 0
+    editorRight.getSession().setMode("ace/mode/json");
+////    editorRight.setOptions({
+////      readOnly: true,
+////      highlightActiveLine: false,
+////      highlightGutterLine: false
+////    })
+////    editorRight.renderer.$cursorLayer.element.style.opacity = 0
 
-    editorLeft.getSession().on('change', function(e) {
-      var leftContent = editorLeft.getValue();
-      var rightContent = leftContent
-      editorRight.setValue(rightContent);
+    editorLeft.getSession().on('change', function (e) {
+      try {
+        eval("var jsonObjectInMem=" + editorLeft.getValue());
+        editorRight.setValue(JSON.stringify(jsonObjectInMem));
+      }
+      catch (err) {
+
+      }
+
     });
+//
+//
+//    $(".dropdown-left").on('click', 'li a', function(){
+//      $(".btn:first-child").html($(this).text() + '<span class="caret"></span>');
+//      $(".btn:first-child").val($(this).text());
+//    });
+//    $(".dropdown-right").on('click', 'li a', function(){
+//      $(".btn:first-child").html($(this).text() + '<span class="caret"></span>');
+//      $(".btn:first-child").val($(this).text());
+//    });
+//
+//    $(".left-theme").on('click', function(){
+//      console.log($(this).text());
+//      editorLeft.setTheme("ace/theme/" + $(this).text());
+//    })
 
-  }())
+
+    $(".right-theme").on('click', function () {
+      console.log($(this).text());
+      editorRight.setTheme("ace/theme/" + $(this).text());
+    })
+    $("#urlLeft").bind("paste", function(e){
+      // access the clipboard using the api
+      var url = e.originalEvent.clipboardData.getData('text');
+
+      $.getJSON(url, function(data) {
+        console.log(data.result);
+        editorLeft.setValue(JSON.stringify(data, null, 2));
+      })
+
+    } );
+
+  }());
 </script>
 </body>
 
