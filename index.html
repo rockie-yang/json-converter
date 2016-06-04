@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
-
   <style type="text/css">
     html, body {
       margin: 0px;
@@ -23,7 +22,7 @@
       right: 0;
       bottom: 0;
       left: 0;
-      height: 300px;
+      height: 700px;
     }
   </style>
 </head>
@@ -31,7 +30,7 @@
 <body ng-app>
 <div class="navbar navbar-inverse navbar-static-top">
   <div class="container">
-    <a href="#" class="navbar-brand">Converter, Convert file from left to right</a>
+    <a href="#" class="navbar-brand">Converter, Convert JSON from left to right</a>
   </div>
 </div>
 <div class="container">
@@ -45,14 +44,16 @@
                     id="dropdown-left-theme" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               theme
               <span class="caret"></span>
+              <span class="glyphicon glyphicon-exclamation-sign" id="convertStatus" style="color:red;display:none"></span>
             </button>
             <ul class="dropdown-menu" id="dropdown-left" aria-labelledby="dropdown-left-theme">
               <li><a href="#" class="left-theme">github</a></li>
               <li><a href="#" class="left-theme">chaos</a></li>
               <li><a href="#" class="left-theme">chrome</a></li>
             </ul>
+
           </div>
-          <div class="col-sm-10">
+          <div class="col-sm-9">
             <input id="urlLeft" type="text" class="form-control" placeholder="url which has json content">
           </div>
 
@@ -64,7 +65,18 @@
 
     </div>
     <div class="col-sm-6">
-
+<form>
+      <div class="row">
+        <div class="col-sm-10">
+          <div class="btn-group">
+            <button type="button" data-spaces="" class="btn btn-default btn-set-space">No Space</button>
+            <button type="button" data-spaces="  " class="btn btn-default active btn-set-space">2 Space</button>
+            <button type="button" data-spaces="   " class="btn btn-default btn-set-space">3 Space</button>
+            <button type="button" data-spaces="    " class="btn btn-default btn-set-space">4 Space</button>
+            <button type="button" data-spaces="tab" class="btn btn-default btn-set-space">Tab</button>
+          </div>
+          </div>
+        <div class="col-sm-2">
       <!--A dropdown button to choose which theme to use for the left editor-->
       <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button"
@@ -78,7 +90,9 @@
           <li><a href="#" class="right-theme">chrome</a></li>
         </ul>
       </div>
-
+        </div>
+      </div>
+</form>
       <div id="editorRight" class="editor">{"a":1}</div>
     </div>
   </div>
@@ -99,6 +113,10 @@
     var editorRight = ace.edit("editorRight");
     editorRight.setTheme("ace/theme/github");
     editorRight.getSession().setMode("ace/mode/json");
+
+
+    var spaces = '  ';
+
 ////    editorRight.setOptions({
 ////      readOnly: true,
 ////      highlightActiveLine: false,
@@ -106,32 +124,34 @@
 ////    })
 ////    editorRight.renderer.$cursorLayer.element.style.opacity = 0
 
-    editorLeft.getSession().on('change', function (e) {
+    function convert() {
       try {
         eval("var jsonObjectInMem=" + editorLeft.getValue());
-        editorRight.setValue(JSON.stringify(jsonObjectInMem));
+        editorRight.setValue(JSON.stringify(jsonObjectInMem, null, spaces));
+        $('#convertStatus').hide();
       }
       catch (err) {
-
+        $('#convertStatus').show();
       }
+    }
+    editorLeft.getSession().on('change', function (e) {
+      convert();
 
     });
-//
-//
-//    $(".dropdown-left").on('click', 'li a', function(){
-//      $(".btn:first-child").html($(this).text() + '<span class="caret"></span>');
-//      $(".btn:first-child").val($(this).text());
-//    });
-//    $(".dropdown-right").on('click', 'li a', function(){
-//      $(".btn:first-child").html($(this).text() + '<span class="caret"></span>');
-//      $(".btn:first-child").val($(this).text());
-//    });
-//
-//    $(".left-theme").on('click', function(){
-//      console.log($(this).text());
-//      editorLeft.setTheme("ace/theme/" + $(this).text());
-//    })
 
+    $(".btn-set-space").on('click', function(e){
+      $(".btn-set-space").removeClass("active");
+
+      spaces = $(this).data('spaces');
+      if (spaces == 'tab') {
+        spaces = '\t';
+      }
+
+      $(this).addClass("active");
+
+      convert();
+
+    });
 
     $(".right-theme").on('click', function () {
       console.log($(this).text());
@@ -144,6 +164,7 @@
       $.getJSON(url, function(data) {
         console.log(data.result);
         editorLeft.setValue(JSON.stringify(data, null, 2));
+        convert();
       })
 
     } );
