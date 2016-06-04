@@ -46,10 +46,10 @@
               <span class="caret"></span>
               <span class="glyphicon glyphicon-exclamation-sign" id="convertStatus" style="color:red;display:none"></span>
             </button>
-            <ul class="dropdown-menu" id="dropdown-left" aria-labelledby="dropdown-left-theme">
-              <li><a href="#" class="left-theme">github</a></li>
-              <li><a href="#" class="left-theme">chaos</a></li>
-              <li><a href="#" class="left-theme">chrome</a></li>
+            <ul class="dropdown-menu" id="left-themes" aria-labelledby="dropdown-left-theme">
+              <!--<li><a href="#" class="left-theme">github</a></li>-->
+              <!--<li><a href="#" class="left-theme">chaos</a></li>-->
+              <!--<li><a href="#" class="left-theme">chrome</a></li>-->
             </ul>
 
           </div>
@@ -84,10 +84,10 @@
           theme
           <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu" id="dropdown-right" aria-labelledby="dropdown-right-theme">
-          <li><a href="#" class="right-theme">github</a></li>
-          <li><a href="#" class="right-theme">chaos</a></li>
-          <li><a href="#" class="right-theme">chrome</a></li>
+        <ul class="dropdown-menu" id="right-themes" aria-labelledby="dropdown-right-theme">
+          <!--<li><a href="#" class="right-theme">github</a></li>-->
+          <!--<li><a href="#" class="right-theme">chaos</a></li>-->
+          <!--<li><a href="#" class="right-theme">chrome</a></li>-->
         </ul>
       </div>
         </div>
@@ -153,10 +153,7 @@
 
     });
 
-    $(".right-theme").on('click', function () {
-      console.log($(this).text());
-      editorRight.setTheme("ace/theme/" + $(this).text());
-    })
+
     $("#urlLeft").bind("paste", function(e){
       // access the clipboard using the api
       var url = e.originalEvent.clipboardData.getData('text');
@@ -168,6 +165,35 @@
       })
 
     } );
+
+    function appendThemes() {
+      var themes = ['ambiance', 'dawn', 'kr_theme', 'solarized_dark', 'omorrow_night_blue',
+      'chaos', 'dreamweaver', 'kuroir', 'solarized_light.css		tomorrow_night_bright',
+      'chrome', 'eclipse', 'merbivore', 'sqlserver', 'tomorrow_night_eighties',
+      'clouds', 'github', 'merbivore_soft',	'terminal', 'twilight',
+      'clouds_midnight', 'idle_fingers','mono_industrial','textmate', 'vibrant_ink',
+      'cobalt', /*'iplastic', 'monokai', 'tomorrow', 'xcode',
+      'crimson_editor', 'katzenmilch', 'pastel_on_dark', 'tomorrow_night'*/].sort();
+
+      for (var i in themes) {
+        var theme = themes[i];
+
+        var liLeft = '<li><a href="#" class="left-theme">' + theme + '</a></li>';
+        var liRight = '<li><a href="#" class="right-theme">' + theme + '</a></li>';
+        $("#left-themes").append(liLeft);
+        $("#right-themes").append(liRight);
+      }
+    }
+
+    appendThemes();
+    $(".right-theme").on('click', function () {
+      console.log($(this).text());
+      editorRight.setTheme("ace/theme/" + $(this).text());
+    })
+    $(".left-theme").on('click', function () {
+      console.log($(this).text());
+      editorLeft.setTheme("ace/theme/" + $(this).text());
+    })
 
   }());
 </script>
