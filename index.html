@@ -24,6 +24,7 @@
       left: 0;
       height: 700px;
     }
+
   </style>
 </head>
 
@@ -31,7 +32,20 @@
 <div class="navbar navbar-inverse navbar-static-top">
   <div class="container">
     <a href="#" class="navbar-brand">Converter, Convert JSON from left to right</a>
+
+    <div class="collapse navbar-collapse navHeaderCollapse">
+      <ul class="nav navbar-nav navbar-right">
+        <!--<li class="active"><a href="#">Home</a></li>-->
+        <li>
+          <!-- the #contact is the id we must set to set modal dialog -->
+          <!-- data-toggle must be set to modal otherwise there will no no reponse when click -->
+          <a href="#contact" data-toggle="modal">
+            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>Help</a>
+        </li>
+      </ul>
+    </div>
   </div>
+
 </div>
 <div class="container">
   <div class="row">
@@ -39,12 +53,13 @@
       <form>
         <div class="row">
           <div class="col-sm-2">
-            <!--A dropdown button to choose which theme to use for the left editor-->
+            <!-- theme for source json editor-->
             <button class="btn btn-default dropdown-toggle" type="button"
                     id="dropdown-left-theme" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               theme
               <span class="caret"></span>
-              <span class="glyphicon glyphicon-exclamation-sign" id="convertStatus" style="color:red;display:none"></span>
+              <span class="glyphicon glyphicon-exclamation-sign" id="convertStatus"
+                    style="color:red;display:none"></span>
             </button>
             <ul class="dropdown-menu" id="left-themes" aria-labelledby="dropdown-left-theme">
               <!--<li><a href="#" class="left-theme">github</a></li>-->
@@ -65,35 +80,99 @@
 
     </div>
     <div class="col-sm-6">
-<form>
-      <div class="row">
-        <div class="col-sm-10">
-          <div class="btn-group">
-            <button type="button" data-spaces="" class="btn btn-default btn-set-space">No Space</button>
-            <button type="button" data-spaces="  " class="btn btn-default active btn-set-space">2 Space</button>
-            <button type="button" data-spaces="   " class="btn btn-default btn-set-space">3 Space</button>
-            <button type="button" data-spaces="    " class="btn btn-default btn-set-space">4 Space</button>
-            <button type="button" data-spaces="tab" class="btn btn-default btn-set-space">Tab</button>
+      <form>
+        <div class="row">
+          <div class="col-sm-10">
+            <div class="btn-group">
+              <button type="button" data-spaces="" class="btn btn-default btn-set-space">0 ' '</button>
+              <button type="button" data-spaces="  " class="btn btn-default active btn-set-space">2 ' '</button>
+              <button type="button" data-spaces="   " class="btn btn-default btn-set-space">3 ' '</button>
+              <button type="button" data-spaces="    " class="btn btn-default btn-set-space">4 ' '</button>
+              <button type="button" data-spaces="tab" class="btn btn-default btn-set-space">Tab</button>
+              <button type="button" class="btn btn-info" id="copy-to-clipboard" data-clipboard-target="#right-textarea">Copy</button>
+              <button type="button" class="btn btn-info">
+                <a href="#" id="save" download="converted.json">Save</a>
+              </button>
+            </div>
           </div>
+          <div class="col-sm-2">
+            <!--A dropdown button to choose which theme to use for the left editor-->
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button"
+                      id="dropdown-right-theme" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                theme
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" id="right-themes" aria-labelledby="dropdown-right-theme">
+                <!--<li><a href="#" class="right-theme">github</a></li>-->
+                <!--<li><a href="#" class="right-theme">chaos</a></li>-->
+                <!--<li><a href="#" class="right-theme">chrome</a></li>-->
+              </ul>
+            </div>
           </div>
-        <div class="col-sm-2">
-      <!--A dropdown button to choose which theme to use for the left editor-->
-      <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button"
-                id="dropdown-right-theme" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          theme
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" id="right-themes" aria-labelledby="dropdown-right-theme">
-          <!--<li><a href="#" class="right-theme">github</a></li>-->
-          <!--<li><a href="#" class="right-theme">chaos</a></li>-->
-          <!--<li><a href="#" class="right-theme">chrome</a></li>-->
-        </ul>
-      </div>
+        </div>
+      </form>
+      <div id="editorRight" class="editor">{"a":1}</div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="modal fade" id="contact" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <!-- it's supprisely that the button should be put before the title -->
+            <!-- otherwise the format will look strange -->
+            <!-- data-dismiss="modal" means close the modal -->
+            <button type="button" class="close" data-dismiss="modal">&times</button>
+            <h4>Convert quoted/unquoted JSON to quoted format</h4>
+          </div>
+          <div class="modal-body">
+            <div class="container bs-docs-container">
+              <div class="bs-callout bs-callout-info">
+                <h4>* unquoted/unquoted json</h4>
+                <ul>
+                  <ol>- JSON data used in Javascript code can be unquoted.</ol>
+                  <ol>- A valid JSON in file need be quoted</ol>
+                  <ol>- The tool is mainly used convert from unquoted to quoted JSON</ol>
+                  <ol>- OR from quoted JSON file with different indention</ol>
+                </ul>
+              </div>
+              <div class="bs-callout bs-callout-info">
+                <h4>* source json is in the left editor</h4>
+                <ul>
+                  <ol>- The json data can be pasted to the left editor</ol>
+                  <ol>- The json data can be gotten from a url</ol>
+                  <ol>- You can modify the source json, it will directly convert to the result json</ol>
+                  <ol>- If the conversion failed, a exclamation sign will show beside the theme drop-down menu</ol>
+                </ul>
+              </div>
+              <div class="bs-callout bs-callout-info">
+                <h4>* result json is in the right editor</h4>
+                <ul>
+                  <ol>- You can also modify the result JSON before copy to clipboard or save to file.</ol>
+                  <ol>- The modification on the result JSON will not saved to the source JSON file</ol>
+                  <ol>- The result json data can be copied to the clipboard</ol>
+                  <ol>- The result json data can be saved to a file</ol>
+
+                </ul>
+              </div>
+              <div class="bs-callout bs-callout-info">
+                <h4>* indention for the result JSON</h4>
+                <ul>
+                  <ol>- The result JSON can have different indention</ol>
+                  <ol>- A JSON file without indention can save data size</ol>
+                  <ol>- While with some indention is easy to read</ol>
+
+                </ul>
+              </div>
+              <div class="modal-footer">
+                <div class="btn btn-default" data-dismiss="modal">Close</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-</form>
-      <div id="editorRight" class="editor">{"a":1}</div>
+
     </div>
   </div>
 </div>
@@ -103,6 +182,9 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
 <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2014-11-29/FileSaver.min.js"></script>
+
 <script type="text/javascript">
   (function () {
     var editorLeft = ace.edit("editorLeft");
@@ -116,6 +198,7 @@
 
 
     var spaces = '  ';
+//    var jsonObjectInMem = '';
 
 ////    editorRight.setOptions({
 ////      readOnly: true,
@@ -123,23 +206,39 @@
 ////      highlightGutterLine: false
 ////    })
 ////    editorRight.renderer.$cursorLayer.element.style.opacity = 0
+    var json;
 
     function convert() {
       try {
         eval("var jsonObjectInMem=" + editorLeft.getValue());
-        editorRight.setValue(JSON.stringify(jsonObjectInMem, null, spaces));
+        json = JSON.stringify(jsonObjectInMem, null, spaces);
+
+        editorRight.setValue(json);
         $('#convertStatus').hide();
+
+        var blob = new Blob([json], {type: "application/json"});
+        var url  = URL.createObjectURL(blob);
+
+        $('#save').attr('href', url);
+
+//        var a = document.createElement('a');
+//        a.download    = "converted.json";
+//        a.href        = url;
+//        a.textContent = "converted.json";
+//        $('#copy-to-clipboard').data('clipboard-text', json);
+
       }
       catch (err) {
         $('#convertStatus').show();
       }
     }
+
     editorLeft.getSession().on('change', function (e) {
       convert();
 
     });
 
-    $(".btn-set-space").on('click', function(e){
+    $(".btn-set-space").on('click', function (e) {
       $(".btn-set-space").removeClass("active");
 
       spaces = $(this).data('spaces');
@@ -154,26 +253,26 @@
     });
 
 
-    $("#urlLeft").bind("paste", function(e){
+    $("#urlLeft").bind("paste", function (e) {
       // access the clipboard using the api
       var url = e.originalEvent.clipboardData.getData('text');
 
-      $.getJSON(url, function(data) {
+      $.getJSON(url, function (data) {
         console.log(data.result);
         editorLeft.setValue(JSON.stringify(data, null, 2));
         convert();
       })
 
-    } );
+    });
 
     function appendThemes() {
       var themes = ['ambiance', 'dawn', 'kr_theme', 'solarized_dark', 'omorrow_night_blue',
-      'chaos', 'dreamweaver', 'kuroir', 'solarized_light.css		tomorrow_night_bright',
-      'chrome', 'eclipse', 'merbivore', 'sqlserver', 'tomorrow_night_eighties',
-      'clouds', 'github', 'merbivore_soft',	'terminal', 'twilight',
-      'clouds_midnight', 'idle_fingers','mono_industrial','textmate', 'vibrant_ink',
-      'cobalt', /*'iplastic', 'monokai', 'tomorrow', 'xcode',
-      'crimson_editor', 'katzenmilch', 'pastel_on_dark', 'tomorrow_night'*/].sort();
+        'chaos', 'dreamweaver', 'kuroir', 'solarized_light.css		tomorrow_night_bright',
+        'chrome', 'eclipse', 'merbivore', 'sqlserver', 'tomorrow_night_eighties',
+        'clouds', 'github', 'merbivore_soft', 'terminal', 'twilight',
+        'clouds_midnight', 'idle_fingers', 'mono_industrial', 'textmate', 'vibrant_ink',
+        'cobalt', /*'iplastic', 'monokai', 'tomorrow', 'xcode',
+         'crimson_editor', 'katzenmilch', 'pastel_on_dark', 'tomorrow_night'*/].sort();
 
       for (var i in themes) {
         var theme = themes[i];
@@ -189,12 +288,34 @@
     $(".right-theme").on('click', function () {
       console.log($(this).text());
       editorRight.setTheme("ace/theme/" + $(this).text());
-    })
+    });
     $(".left-theme").on('click', function () {
       console.log($(this).text());
       editorLeft.setTheme("ace/theme/" + $(this).text());
-    })
+    });
 
+    var inHelp = false;
+    $("#show-hide-help").on('click', function () {
+      inHelp = !inHelp
+      var glyph = '<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>';
+      if (inHelp) {
+        $('#show-hide-help').html(glyph + 'Hide Help');
+        $('.help-tip-inactive').addClass('help-tip-active');
+        $('.help-tip-inactive').removeClass('help-tip-inactive');
+      }
+      else {
+        $('#show-hide-help').html(glyph + 'Show Help');
+        $('.help-tip-active').addClass('help-tip-inactive');
+        $('.help-tip-active').removeClass('help-tip-active');
+      }
+    });
+
+    new Clipboard('#copy-to-clipboard');
+
+    var rightText = $('#editorRight textarea');
+    rightText.attr('id', 'right-textarea');
+
+//    data-clipboard-target="#foo"
   }());
 </script>
 </body>
